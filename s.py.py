@@ -115,4 +115,103 @@ if name != "":
                 self.image = pygame.transform.rotate(self.images[self.index], self.vel * -2)
             else:
                 self.image = pygame.transform.rotate(self.images[self.index], -90)
+  class Pipe(pygame.sprite.Sprite):
+        def __init__(self, x, y, position):
+            pygame.sprite.Sprite.__init__(self)
+            self.image = pygame.image.load('img/pipe.png')
+            self.rect = self.image.get_rect()
+            #position 1 is from the top, -1 is from the bottom
+            if position == 1:
+                self.image = pygame.transform.flip(self.image, False, True)
+                self.rect.bottomleft = [x, y - int(pipe_gap / 2)]
+            if position == -1:
+                self.rect.topleft = [x, y + int(pipe_gap / 2)]
 
+        def update(self):
+            self.rect.x -= scroll_speed
+            if self.rect.right < 0:
+                self.kill()
+
+
+    class Button():
+        def __init__(self, x, y, image):
+            self.image = image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (x, y)
+
+        def draw(self):
+
+            action = False
+
+            #get mouse position
+            pos = pygame.mouse.get_pos()
+
+            #check if mouse is over the button
+            if self.rect.collidepoint(pos):
+                if pygame.mouse.get_pressed()[0] == 1:
+                    action = True
+
+            #draw button
+            screen.blit(self.image, (self.rect.x, self.rect.y))
+
+            return action
+    class Button2():
+        def __init__(self, x, y, image):
+            self.image = image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (x, y)
+
+        def draw(self):
+
+            action = False
+
+            #get mouse position
+            pos = pygame.mouse.get_pos()
+
+            #check if mouse is over the button
+            if self.rect.collidepoint(pos):
+                if pygame.mouse.get_pressed()[0] == 1:
+
+                    pygame.quit()
+
+            #draw button
+            screen.blit(self.image, (self.rect.x, self.rect.y))
+
+            return action
+
+    bird_group = pygame.sprite.Group()
+    pipe_group = pygame.sprite.Group()
+
+    flappy = Bird(100, int(screen_height / 2))
+
+    bird_group.add(flappy)
+
+    #create restart button instance
+    button = Button(screen_width // 2 - 50, screen_height // 2 - 100, button_img)
+    button2 = Button2(screen_width // 2 - 50, screen_height // 2 - 50, cancel_img)
+
+    #highscore display
+
+    text_file = open("score.txt", "r")
+    whole_thing = text_file.readlines()
+    print(type(whole_thing))
+    print(whole_thing)
+
+
+
+    background_color = (220, 247, 247)
+
+    highscore_surface = pygame.Surface((300, 400))
+    highscore_surface.fill((90, 100, 120))
+
+    myfont = pygame.font.SysFont('Comic Sans MS', 30)
+    white = (255, 255, 255)
+    green = (0, 255, 0)
+    blue = (0, 0, 128)
+    def scorelist():
+        # Screen caption
+        pygame.display.set_caption("")
+        font_color=(0,150,250)
+        font_obj=pygame.font.Font("C:\Windows\Fonts\segoeprb.ttf",20)
+        # Render the objects
+        count = 0
